@@ -1,11 +1,11 @@
-import {Matcher} from "../../../src/matcher/type/Matcher";
-import {anyNumber} from "../../../src/ts-mockito";
+import {AnyNumberMatcher} from "../../../src/matcher/type/AnyNumberMatcher";
+import {anyNumber, instance, mock, verify} from "../../../src/ts-mockito";
 
 describe("AnyNumberMatcher", () => {
     describe("checking if positive number is matching", () => {
         it("returns true", () => {
             // given
-            const testObj: Matcher = anyNumber();
+            const testObj = new AnyNumberMatcher();
 
             // when
             const result = testObj.match(3);
@@ -18,7 +18,7 @@ describe("AnyNumberMatcher", () => {
     describe("checking if negative number is matching", () => {
         it("returns true", () => {
             // given
-            const testObj: Matcher = anyNumber();
+            const testObj = new AnyNumberMatcher();
 
             // when
             const result = testObj.match(-3);
@@ -31,7 +31,7 @@ describe("AnyNumberMatcher", () => {
     describe("checking if zero is matching", () => {
         it("returns true", () => {
             // given
-            const testObj: Matcher = anyNumber();
+            const testObj = new AnyNumberMatcher();
 
             // when
             const result = testObj.match(0);
@@ -44,7 +44,7 @@ describe("AnyNumberMatcher", () => {
     describe("checking if string representation of number is matching", () => {
         it("returns false", () => {
             // given
-            const testObj: Matcher = anyNumber();
+            const testObj = new AnyNumberMatcher();
 
             // when
             const result = testObj.match("5");
@@ -57,7 +57,7 @@ describe("AnyNumberMatcher", () => {
     describe("checking if object is matching", () => {
         it("returns false", () => {
             // given
-            const testObj: Matcher = anyNumber();
+            const testObj = new AnyNumberMatcher();
 
             // when
             const result = testObj.match({});
@@ -66,4 +66,17 @@ describe("AnyNumberMatcher", () => {
             expect(result).toBeFalsy();
         });
     });
+});
+
+describe("anyNumber", () => {
+  describe("using in verify statements", () => {
+    it("can be used for verifying", () => {
+      class Foo {
+        public add = (num1: number, num2: number): number => num1 + num2;
+      }
+      const foo = mock(Foo);
+      instance(foo).add(1, 2);
+      verify(foo.add(anyNumber(), anyNumber())).once();
+    });
+  });
 });
